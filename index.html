@@ -1,0 +1,1252 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Portal - Bakorwil II Bojonegoro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* --- CSS CORE & VARIABLES --- */
+        :root {
+            --primary: #1e3a8a;
+            --primary-light: #3b82f6;
+            --bg-active: #eff6ff;
+            --dark: #0f172a;
+            --light: #f8fafc;
+            --gray: #64748b;
+            --border: #e2e8f0;
+            --sidebar-width: 290px;
+            --success: #10b981;
+            --warning: #f59e0b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+            display: flex;
+            min-height: 100vh;
+            overflow: auto;
+        }
+
+        /* --- INTEGRATED SIDEBAR STYLE --- */
+        aside {
+            width: var(--sidebar-width);
+            min-width: var(--sidebar-width);
+            background-color: #ffffff;
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            z-index: 100;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar-brand {
+            padding: 20px 24px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .brand-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .close-sidebar-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.3rem;
+            color: var(--gray);
+            cursor: pointer;
+        }
+
+        .sidebar-menu-wrapper {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 12px;
+        }
+
+        .menu-divider {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #94a3b8;
+            text-transform: uppercase;
+            padding: 16px 12px 8px 12px;
+            letter-spacing: 0.05em;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 4px;
+        }
+
+        .sidebar-menu a, .dropdown-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px;
+            color: var(--gray);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .menu-link-content {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .menu-link-content i {
+            width: 20px;
+            text-align: center;
+            font-size: 1rem;
+        }
+
+        .sidebar-menu a:hover, .dropdown-toggle:hover, .sidebar-menu li.active > a {
+            background-color: var(--bg-active);
+            color: var(--primary);
+        }
+
+        .sidebar-menu li.active > a i {
+            color: var(--primary-light);
+        }
+
+        .arrow-icon {
+            font-size: 0.75rem;
+            transition: transform 0.2s ease;
+        }
+
+        li.open .arrow-icon {
+            transform: rotate(180deg);
+            color: var(--primary-light);
+        }
+
+        .submenu {
+            list-style: none;
+            display: none;
+            background-color: #f8fafc;
+            border-radius: 8px;
+            margin-top: 4px;
+            padding: 4px 0 4px 14px;
+            border-left: 2px solid var(--border);
+        }
+
+        li.open .submenu {
+            display: block;
+        }
+
+        .submenu a {
+            padding: 8px 12px;
+            font-size: 0.85rem;
+            font-weight: 400;
+            color: #475569;
+            display: block;
+            text-decoration: none;
+        }
+
+        .submenu a:hover, .submenu li.active-sub a {
+            color: var(--primary-light);
+        }
+
+        .app-footer {
+            background-color: #ffffff;
+            border-top: 1px solid var(--border);
+            padding: 12px 18px;
+            display: grid;
+            gap: 6px;
+            color: var(--dark);
+            font-size: 0.88rem;
+            line-height: 1;
+        }
+
+        .app-footer a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .app-footer a:hover {
+            text-decoration: underline;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 6px;
+            align-items: start;
+        }
+
+        .footer-group {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .footer-group span,
+        .footer-group p {
+            color: var(--gray);
+            font-size: 0.82rem;
+            margin: 0;
+            line-height: 1;
+        }
+
+        .footer-group a {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 500;
+            margin: 0;
+            padding: 0;
+            line-height: 1;
+        }
+
+        .footer-group a i {
+            width: 18px;
+            text-align: center;
+        }
+
+        .footer-note {
+            color: var(--gray);
+            font-size: 0.78rem;
+            margin: 0;
+            padding-top: 6px;
+            line-height: 1;
+            text-align: center;
+        }
+
+        .user-profile {
+            padding: 16px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background-color: #ffffff;
+        }
+
+        .user-avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .user-info h4 {
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .user-info p {
+            font-size: 0.75rem;
+            color: var(--gray);
+        }
+
+        /* --- MAIN WORKSPACE VIEW --- */
+        main {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+            width: 100%;
+        }
+
+        header {
+            height: 65px;
+            background-color: #ffffff;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .toggle-sidebar-btn {
+            display: none;
+            background: var(--bg-active);
+            border: none;
+            color: var(--primary);
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            cursor: pointer;
+        }
+
+        .page-title h1 {
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        .content-body {
+            padding: 24px;
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+
+        /* --- LANDING MAP & HERO DESIGN COMPONENT --- */
+        .landing-hero-container {
+            background: #ffffff;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 18px 40px rgba(30, 58, 138, 0.14);
+            margin-bottom: 32px;
+            display: grid;
+            gap: 0;
+        }
+
+        .landing-hero-photo {
+            position: relative;
+        }
+
+        .landing-hero-photo img {
+            width: 100%;
+            display: block;
+            height: auto;
+            object-fit: contain;
+        }
+
+        .hero-image-overlay {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 18px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+            padding: 0 18px 18px;
+            background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(15,23,42,0.22) 55%, rgba(15,23,42,0.44) 100%);
+        }
+
+        .hero-image-btn {
+            background: rgba(255, 255, 255, 0.92);
+            color: var(--dark);
+            border: 1px solid rgba(15, 23, 42, 0.08);
+            border-radius: 999px;
+            padding: 10px 18px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: transform 0.2s ease, background 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .hero-image-btn:hover {
+            transform: translateY(-2px);
+            background: white;
+        }
+
+        .landing-hero-copy {
+            padding: 32px 36px 28px 36px;
+            color: var(--dark);
+            text-align: center;
+            background: #ffffff;
+        }
+
+        .badge-prov {
+            background: var(--primary);
+            color: #ffffff;
+            padding: 8px 20px;
+            border-radius: 999px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            display: inline-block;
+            margin-bottom: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .landing-hero-container h2 {
+            color: var(--dark);
+            font-size: clamp(2rem, 2.4vw, 2.8rem);
+            font-weight: 800;
+            line-height: 1.1;
+            max-width: 860px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .landing-hero-container p {
+            color: var(--gray);
+            font-size: 1rem;
+            max-width: 760px;
+            margin: 0 auto;
+            text-align: center;
+            line-height: 1.8;
+        }
+
+        .landing-hero-container h2 {
+            font-size: clamp(2rem, 2.4vw, 2.8rem);
+            font-weight: 800;
+            line-height: 1.1;
+            max-width: 860px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .landing-hero-container p {
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.9);
+            max-width: 760px;
+            margin: 0 auto;
+            text-align: center;
+            line-height: 1.8;
+        }
+
+        .hero-summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 18px;
+            width: 100%;
+        }
+
+        .hero-stat-card {
+            background: rgba(255, 255, 255, 0.16);
+            border: 1px solid rgba(255, 255, 255, 0.22);
+            border-radius: 16px;
+            padding: 22px 20px;
+            text-align: center;
+            color: #ffffff;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+        }
+
+        .hero-stat-card strong {
+            display: block;
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .hero-stat-card span {
+            display: block;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.82);
+        }
+
+        /* --- SERVICES INTERACTIVE GRID --- */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+            margin-top: 24px;
+        }
+
+        .service-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .service-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
+            border-color: var(--primary-light);
+        }
+
+        .icon-box {
+            width: 44px;
+            height: 44px;
+            background-color: #eff6ff;
+            color: var(--primary-light);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            margin-bottom: 16px;
+        }
+
+        .service-card h4 {
+            font-size: 1.05rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--dark);
+        }
+
+        .service-card p {
+            font-size: 0.85rem;
+            color: var(--gray);
+            line-height: 1.5;
+        }
+
+        /* --- DASHBOARD REUSABLE WIDGETS --- */
+        .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-bottom: 24px; }
+        .stat-card { background: white; border-radius: 12px; border: 1px solid var(--border); padding: 20px; display: flex; flex-direction: column; gap: 8px; }
+        .stat-label { font-size: 0.85rem; color: var(--gray); font-weight: 500; }
+        .stat-value { font-size: 2rem; font-weight: 700; color: var(--dark); }
+        .content-card { background: white; border-radius: 12px; border: 1px solid var(--border); padding: 24px; margin-bottom: 20px; }
+        .content-card h3 { margin-bottom: 14px; font-size: 1.1rem; color: var(--dark); display: flex; align-items: center; gap: 8px; }
+
+        .map-embed {
+            position: relative;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            margin-top: 18px;
+            min-height: 420px;
+        }
+
+        .map-embed iframe {
+            width: 100%;
+            height: 100%;
+            border: 0;
+            min-height: 420px;
+        }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.9rem; }
+        table th, table td { border: 1px solid var(--border); padding: 12px; text-align: left; }
+        table th { background-color: var(--light); color: var(--dark); font-weight: 600; }
+        
+        .form-group { margin-bottom: 16px; }
+        .form-group label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px; color: #334155; }
+        .form-control { width: 100%; padding: 10px 14px; border: 1px solid var(--border); border-radius: 8px; outline: none; font-size: 0.9rem; }
+        .form-control:focus { border-color: var(--primary-light); }
+        .btn { background-color: var(--primary); color: white; padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: 500; font-size: 0.9rem; }
+        .btn:hover { background-color: var(--primary-light); }
+
+        .news-item { padding: 14px 0; border-bottom: 1px solid var(--border); }
+        .news-item:last-child { border-bottom: none; }
+        .news-meta { font-size: 0.75rem; color: var(--primary-light); font-weight: 600; margin-bottom: 4px; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+
+        .sidebar-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.3); z-index: 90; }
+        .landing-footer { text-align: center; padding: 24px 0 10px 0; color: var(--gray); font-size: 0.85rem; border-top: 1px solid var(--border); margin-top: 40px; }
+
+        .chat-float-btn {
+            position: fixed;
+            right: 24px;
+            bottom: 24px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 999px;
+            padding: 14px 18px;
+            box-shadow: 0 18px 40px rgba(30, 58, 138, 0.25);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 120;
+            transition: transform 0.2s ease, opacity 0.2s ease;
+        }
+
+        .chat-float-btn:hover {
+            transform: translateY(-2px);
+            opacity: 0.95;
+        }
+
+        .chat-widget {
+            position: fixed;
+            right: 24px;
+            bottom: 90px;
+            width: 360px;
+            max-width: calc(100% - 32px);
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(15, 23, 42, 0.18);
+            overflow: hidden;
+            display: none;
+            flex-direction: column;
+            z-index: 130;
+        }
+
+        .chat-widget.open {
+            display: flex;
+        }
+
+        .chat-header {
+            padding: 18px 20px;
+            background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .chat-header .chat-title {
+            font-size: 1rem;
+            font-weight: 700;
+            line-height: 1.3;
+        }
+
+        .chat-header .chat-subtitle {
+            font-size: 0.82rem;
+            opacity: 0.92;
+            margin-top: 4px;
+        }
+
+        .chat-close-btn {
+            background: rgba(255, 255, 255, 0.16);
+            border: none;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: grid;
+            place-items: center;
+        }
+
+        .chat-messages {
+            padding: 18px 18px 12px 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-height: 360px;
+            overflow-y: auto;
+            background: #f8fafc;
+        }
+
+        .chat-message {
+            display: inline-flex;
+            padding: 14px 16px;
+            border-radius: 18px;
+            max-width: 100%;
+            line-height: 1.5;
+            word-break: break-word;
+        }
+
+        .chat-message.user {
+            align-self: flex-end;
+            background: var(--primary);
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+
+        .chat-message.bot {
+            align-self: flex-start;
+            background: #ffffff;
+            color: var(--dark);
+            border: 1px solid rgba(15, 23, 42, 0.08);
+            border-bottom-left-radius: 4px;
+        }
+
+        .chat-input-area {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 16px 18px 20px 18px;
+            border-top: 1px solid #e2e8f0;
+            background: white;
+        }
+
+        .chat-input {
+            flex: 1;
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            padding: 12px 16px;
+            outline: none;
+            font-size: 0.95rem;
+            color: var(--dark);
+            background: #f8fafc;
+        }
+
+        .chat-send-btn {
+            background: var(--primary);
+            border: none;
+            color: white;
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: grid;
+            place-items: center;
+        }
+
+        @media (max-width: 992px) {
+            aside { position: fixed; top: 0; left: 0; height: 100vh; transform: translateX(-100%); }
+            aside.open { transform: translateX(0); }
+            .close-sidebar-btn, .toggle-sidebar-btn { display: block; }
+            .sidebar-overlay.open { display: block; }
+            .grid-2 { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleMobileSidebar()"></div>
+
+    <aside id="sidebarMenu">
+        <div style="display: flex; flex-direction: column; height: 100%; overflow: hidden;">
+            
+            <div class="sidebar-brand">
+                <div class="brand-logo" onclick="loadLandingPage()">
+                    <i class="fa-solid fa-layer-group" style="margin-right: 6px;"></i>
+                    <span>Smart Bakorwil II</span>
+                </div>
+                <button class="close-sidebar-btn" onclick="toggleMobileSidebar()">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            
+            <div class="sidebar-menu-wrapper">
+                <div class="menu-divider">Dashboard & Layanan</div>
+                <ul class="sidebar-menu">
+                    <li id="menu-dashboard-wilayah" data-page="dashboard-wilayah">
+                        <a href="#"><div class="menu-link-content"><i class="fa-solid fa-chart-pie"></i> Dashboard Wilayah</div></a>
+                    </li>
+                    <li id="menu-surat-digital" data-page="surat-digital">
+                        <a href="#"><div class="menu-link-content"><i class="fa-solid fa-envelope-open-text"></i> Surat Digital</div></a>
+                    </li>
+                    <li id="menu-pengaduan-publik" data-page="pengaduan-publik">
+                        <a href="#"><div class="menu-link-content"><i class="fa-solid fa-bullhorn"></i> Pengaduan Publik</div></a>
+                    </li>
+                    <li id="menu-booking-fasilitas" data-page="booking-fasilitas">
+                        <a href="#"><div class="menu-link-content"><i class="fa-solid fa-calendar-check"></i> Booking Fasilitas</div></a>
+                    </li>
+                    <li id="menu-statistik-pembangunan" data-page="statistik-pembangunan">
+                        <a href="#"><div class="menu-link-content"><i class="fa-solid fa-chart-line"></i> Statistik Pembangunan</div></a>
+                    </li>
+                    <li id="menu-gis-peta" data-page="gis-peta">
+                        <a href="#"><div class="menu-link-content"><i class="fa-solid fa-map-location-dot"></i> GIS / Peta Wilayah</div></a>
+                    </li>
+                </ul>
+
+                <div class="menu-divider">Informasi Resmi Publik</div>
+                <ul class="sidebar-menu">
+                    <li id="menu-beranda" data-page="beranda">
+                        <a href="#"><div class="menu-link-content"><i class="fa-solid fa-house"></i> Beranda</div></a>
+                    </li>
+
+                    <li>
+                        <div class="dropdown-toggle" onclick="toggleDropdown(this)">
+                            <div class="menu-link-content"><i class="fa-solid fa-building"></i> Profil</div>
+                            <i class="fa-solid fa-chevron-down arrow-icon"></i>
+                        </div>
+                        <ul class="submenu">
+                            <li><a href="#" onclick="handleSubMenuClick(this, ' Tentang Kami')">Tentang Kami</a></li>
+                            <li><a href="#" onclick="handleSubMenuClick(this, ' Tugas dan Fungsi')">Tugas dan Fungsi</a></li>
+                            <li><a href="#" onclick="handleSubMenuClick(this, ' Kedudukan dan Alamat')">Kedudukan dan Alamat</a></li>
+                            <li><a href="#" onclick="handleSubMenuClick(this, ' Struktur Organisasi')">Struktur Organisasi</a></li>
+                            <li><a href="#" onclick="handleSubMenuClick(this, 'Sejarah')">Sejarah</a></li>
+                            <li><a href="#" onclick="handleSubMenuClick(this, 'Sejarah Provinsi Jawa Timur')">Sejarah Provinsi Jawa Timur</a></li>
+                            <li><a href="#" onclick="handleSubMenuClick(this, 'Visi dan Misi')">Visi dan Misi</a></li>
+                            <li><a href="#" onclick="handleSubMenuClick(this, 'Profil Wilayah Kerja')">Profil Wilayah Kerja</a></li>
+                            <li><a href="#" onclick="handleSubMenuClick(this, 'Wilayah Kerja Bakorwil Prov. Jatim')">Wilayah Kerja Bakorwil Prov. Jatim</a></li>
+                        </ul>
+                    </li>
+
+                    <li id="menu-berita" data-page="berita"><a href="#"><div class="menu-link-content"><i class="fa-solid fa-newspaper"></i> Berita</div></a></li>
+                    <li id="menu-berita-jatim" data-page="berita-jatim"><a href="#"><div class="menu-link-content"><i class="fa-solid fa-earth-asia"></i> Berita Jatim</div></a></li>
+                    <li id="menu-info-ejsc" data-page="info-ejsc"><a href="#"><div class="menu-link-content"><i class="fa-solid fa-circle-info"></i> Info EJSC</div></a></li>
+                    <li id="menu-ppid" data-page="ppid"><a href="#"><div class="menu-link-content"><i class="fa-solid fa-id-card-clip"></i> PPID</div></a></li>
+                    <li id="menu-kegiatan" data-page="kegiatan"><a href="#"><div class="menu-link-content"><i class="fa-solid fa-angles-right"></i> Kegiatan</div></a></li>
+
+                    <li>
+                        <div class="dropdown-toggle" onclick="toggleDropdown(this)">
+                            <div class="menu-link-content"><i class="fa-solid fa-handshake-angle"></i> Layanan</div>
+                            <i class="fa-solid fa-chevron-down arrow-icon"></i>
+                        </div>
+                        <ul class="submenu">
+                            <li><a href="#" onclick="handleSubMenuClick(this, 'SK & Standard Pelayanan')">SK & Standard Pelayanan</a></li>
+                            <li><a href="#" onclick="handleSubMenuClick(this, 'Maklumat Pelayanan')">Maklumat Pelayanan</a></li>
+                            <li><a href="#" onclick="handleSubMenuClick(this, 'Peminjaman Ruang Kelas EJSC')">Peminjaman Ruang Kelas EJSC</a></li>
+                            <li><a href="#" onclick="handleSubMenuClick(this, 'FAQ')">FAQ</a></li>
+                        </ul>
+                    </li>
+
+                    <li id="menu-skm" data-page="skm"><a href="#"><div class="menu-link-content"><i class="fa-solid fa-square-poll-vertical"></i> SKM</div></a></li>
+
+                    <li>
+                        <div class="dropdown-toggle" onclick="toggleDropdown(this)">
+                            <div class="menu-link-content"><i class="fa-solid fa-file-shield"></i> SAKIP-RB</div>
+                            <i class="fa-solid fa-chevron-down arrow-icon"></i>
+                        </div>
+                        <ul class="submenu">
+                            <li><a href="#" onclick="handleSubMenuClick(this, 'SAKIP-RB 2021')">SAKIP-RB 2021</a></li>
+                            <li><a href="#" onclick="handleSubMenuClick(this, 'SAKIP-RB 2022')">SAKIP-RB 2022</a></li>
+                            <li><a href="#" onclick="handleSubMenuClick(this, 'SAKIP-RB 2023')">SAKIP-RB 2023</a></li>
+                            <li><a href="#" onclick="handleSubMenuClick(this, 'SAKIP-RB 2024')">SAKIP-RB 2024</a></li>
+                            <li><a href="#" onclick="handleSubMenuClick(this, 'SAKIP-RB 2025')">SAKIP-RB 2025</a></li>
+                            <li><a href="#" onclick="handleSubMenuClick(this, 'SAKIP-RB 2026')">SAKIP-RB 2026</a></li>
+                        </ul>
+                    </li>
+
+                    <li>
+                        <div class="dropdown-toggle" onclick="toggleDropdown(this)">
+                            <div class="menu-link-content"><i class="fa-solid fa-lightbulb"></i> Inovasi</div>
+                            <i class="fa-solid fa-chevron-down arrow-icon"></i>
+                        </div>
+                        <ul class="submenu">
+                            <li><a href="#" onclick="handleSubMenuClick(this, 'Pasar Merdeka')">Pasar Merdeka</a></li>
+                            <li><a href="#" onclick="handleSubMenuClick(this, 'Grebang Ratubangnegoro Kertowilangan')">Grebang Ratubangnegoro Kertowilangan</a></li>
+                            <li><a href="#" onclick="handleSubMenuClick(this, 'Monev Sinergi')">Monev Sinergi</a></li>
+                            <li><a href="#" onclick="handleSubMenuClick(this, 'Workshop Series SAPA AKSARA')">Workshop Series SAPA AKSARA</a></li>
+                            <li><a href="#" onclick="handleSubMenuClick(this, 'Layanan/Inovasi Dinas Sosial Prov. Jatim')">Layanan/Inovasi Dinas Sosial Prov. Jatim</a></li>
+                        </ul>
+                    </li>
+
+                    <li id="menu-lapor" data-page="lapor"><a href="#"><div class="menu-link-content"><i class="fa-solid fa-triangle-exclamation"></i> LAPOR!</div></a></li>
+                    <li id="menu-video" data-page="video"><a href="#"><div class="menu-link-content"><i class="fa-brands fa-youtube"></i> YOUTUBE</div></a></li>
+                    <li id="menu-foto" data-page="foto"><a href="#"><div class="menu-link-content"><i class="fa-brands fa-instagram"></i> INSTAGRAM</div></a></li>
+                    <li id="menu-lokasi" data-page="lokasi"><a href="#"><div class="menu-link-content"><i class="fa-solid fa-location-dot"></i> LOKASI</div></a></li>
+                </ul>
+            </div>
+
+            <div class="user-profile">
+                <div class="user-avatar">NF</div>
+                <div class="user-info">
+                    <h4>M. Nanda Ferdiansyah</h4>
+                    <p>Developer Administrator</p>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <main>
+        <header>
+            <div class="header-left">
+                <button class="toggle-sidebar-btn" onclick="toggleMobileSidebar()">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+                <div class="page-title">
+                    <h1 id="main-title-view">Selamat Datang</h1>
+                </div>
+            </div>
+        </header>
+
+        <div class="content-body" id="main-content-area">
+            </div>
+    </main>
+
+    <footer class="app-footer">
+        <div class="footer-grid">
+            <div class="footer-group">
+                <strong>Lokasi</strong>
+                <a href="https://maps.app.goo.gl/LAiESqZCxRd5ieY2A" target="_blank"><i class="fa-solid fa-location-dot"></i> Google Maps Bakorwil II</a>
+            </div>
+            <div class="footer-group">
+                <strong>Telepon</strong>
+                <a href="tel:+623535254758"><i class="fa-solid fa-phone"></i> (0353) 5254758</a>
+                <a href="tel:+62881901"><i class="fa-solid fa-phone"></i> 881901</a>
+            </div>
+            <div class="footer-group">
+                <strong>Email</strong>
+                <a href="https://mail.google.com/mail/?view=cm&fs=1&to=bakorwil@jatimprov.go.id" target="_blank" rel="noopener noreferrer" title="bakorwil@jatimprov.go.id"><i class="fa-brands fa-google"></i> bakorwil@jatimprov.go.id</a>
+            </div>
+            <div class="footer-group">
+                <strong>Kunjungi Bakorwil Lain</strong>
+                <a href="https://bakorwilmadiun.jatimprov.go.id/" target="_blank"><i class="fa-solid fa-globe"></i> Bakorwil Madiun</a>
+                <a href="https://bakorwilmalang.jatimprov.go.id/" target="_blank"><i class="fa-solid fa-globe"></i> Bakorwil Malang</a>
+                <a href="https://bakorwiljember.jatimprov.go.id/" target="_blank"><i class="fa-solid fa-globe"></i> Bakorwil Jember</a>
+                <a href="https://bakorwilpamekasan.jatimprov.go.id/" target="_blank"><i class="fa-solid fa-globe"></i> Bakorwil Pamekasan</a>
+            </div>
+        </div>
+        <p class="footer-note">&copy; 2026 Badan Koordinasi Wilayah II Bojonegoro - Pemerintah Provinsi Jawa Timur.</p>
+    </footer>
+
+    <div class="chat-widget" id="chatWidget">
+        <div class="chat-header">
+            <div>
+                <div class="chat-title">Chatbot Bakorwil II</div>
+                <div class="chat-subtitle">Tanya layanan, surat, atau informasi publik</div>
+            </div>
+            <button class="chat-close-btn" onclick="toggleChatWindow()"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="chat-messages" id="chatMessages"></div>
+        <div class="chat-input-area">
+            <input id="chatInput" class="chat-input" type="text" placeholder="Ketik pertanyaan Anda..." onkeydown="if(event.key === 'Enter') handleSendChat()">
+            <button class="chat-send-btn" onclick="handleSendChat()"><i class="fa-solid fa-paper-plane"></i></button>
+        </div>
+    </div>
+    <button class="chat-float-btn" id="chatFloatBtn" onclick="toggleChatWindow()"><i class="fa-solid fa-comments"></i> Chatbot</button>
+
+    <script>
+        function toggleMobileSidebar() {
+            document.getElementById('sidebarMenu').classList.toggle('open');
+            document.getElementById('sidebarOverlay').classList.toggle('open');
+        }
+
+        function toggleDropdown(element) {
+            const parentLi = element.parentElement;
+            const openDropdowns = document.querySelectorAll('.sidebar-menu li.open');
+            openDropdowns.forEach(item => { if (item !== parentLi) item.classList.remove('open'); });
+            parentLi.classList.toggle('open');
+        }
+
+        function toggleChatWindow() {
+            const widget = document.getElementById('chatWidget');
+            const button = document.getElementById('chatFloatBtn');
+            const isOpen = widget.classList.toggle('open');
+            button.style.display = isOpen ? 'none' : 'flex';
+
+            if (isOpen) {
+                const messages = document.getElementById('chatMessages');
+                if (!messages.hasChildNodes()) {
+                    addChatMessage('Halo! Saya Chatbot Bakorwil II. Silakan ajukan pertanyaan tentang layanan publik, surat digital, booking fasilitas, atau pengaduan.', 'bot');
+                }
+                document.getElementById('chatInput').focus();
+            }
+        }
+
+        function handleSendChat() {
+            const input = document.getElementById('chatInput');
+            const text = input.value.trim();
+            if (!text) return;
+            addChatMessage(text, 'user');
+            input.value = '';
+            setTimeout(() => {
+                addChatMessage(generateBotResponse(text), 'bot');
+            }, 450);
+        }
+
+        function addChatMessage(text, type) {
+            const messages = document.getElementById('chatMessages');
+            const message = document.createElement('div');
+            message.className = `chat-message ${type}`;
+            message.innerText = text;
+            messages.appendChild(message);
+            messages.scrollTop = messages.scrollHeight;
+        }
+
+        function generateBotResponse(text) {
+            const content = text.toLowerCase();
+            const faq = [
+                {
+                    keys: ['surat', 'pengajuan surat', 'surat digital', 'pengajuan'],
+                    answer: 'Untuk surat digital, pilih menu "Surat Digital". Isi nomor indeks, perihal, dan kirim. Saya bisa bantu jika Anda ingin ringkasan langkah pengajuan.'
+                },
+                {
+                    keys: ['lapor', 'pengaduan', 'aduan', 'aspirasi'],
+                    answer: 'Gunakan menu "LAPOR!" untuk mengajukan pengaduan publik. Tulis masalah dengan jelas: lokasi, jenis masalah, dan tanggal kejadian jika memungkinkan.'
+                },
+                {
+                    keys: ['booking', 'ruang', 'reservasi', 'jadwal'],
+                    answer: 'Buka menu "Booking Fasilitas" untuk memesan ruang atau studio EJSC. Pilih tanggal dan jenis fasilitas yang dibutuhkan.'
+                },
+                {
+                    keys: ['dashboard', 'statistik', 'data', 'capaian'],
+                    answer: 'Menu "Dashboard Wilayah" menampilkan statistik operasional dan capaian pembangunan untuk wilayah kerja Bakorwil II.'
+                },
+                {
+                    keys: ['gis', 'peta', 'wilayah', 'geografis'],
+                    answer: 'Informasi GIS dan peta wilayah tersedia pada menu "GIS / Peta Wilayah". Di sana Anda dapat melihat ringkasan data spasial dan informasi wilayah.'
+                },
+                {
+                    keys: ['berita', 'kegiatan', 'informasi'],
+                    answer: 'Untuk berita dan kegiatan, pilih menu "Berita" atau "Kegiatan". Di sana tersedia update resmi dan agenda kegiatan terkini.'
+                },
+                {
+                    keys: ['profil', 'tentang kami', 'visi misi', 'struktur organisasi'],
+                    answer: 'Menu "Profil" memuat informasi tentang tugas, fungsi, visi misi, dan struktur organisasi Bakorwil II Bojonegoro.'
+                }
+            ];
+
+            for (const item of faq) {
+                if (item.keys.some(key => content.includes(key))) {
+                    return item.answer;
+                }
+            }
+
+            if (content.includes('error') || content.includes('gagal') || content.includes('tidak bisa') || content.includes('gak bisa')) {
+                return 'Jika terjadi error atau masalah, coba muat ulang halaman dan gunakan menu yang relevan. Jelaskan masalahnya secara singkat, misalnya "tidak bisa kirim surat" atau "error booking".';
+            }
+
+            if (content.includes('maaf')) {
+                return 'Tidak apa-apa, saya di sini untuk membantu. Silakan ulangi pertanyaan Anda dengan kata-kata sederhana seperti "surat", "lapor", "booking", atau "peta".';
+            }
+
+            if (content.includes('tolong')) {
+                return 'Tolong beri tahu saya topik yang Anda butuhkan, misalnya "surat", "lapor", "booking", "dashboard", atau "peta".';
+            }
+
+            if (content.includes('belum bisa') || content.includes('sudah bisa') || content.includes('oke') || content.includes('ok') || content.includes('baik')) {
+                if (content.includes('belum bisa')) {
+                    return 'Saya minta maaf jika belum bisa membantu. Coba jelaskan lagi dengan kata kunci layanan yang Anda cari.';
+                }
+                if (content.includes('sudah bisa')) {
+                    return 'Alhamdulillah, semoga sudah membantu. Jika ada pertanyaan lain, silakan ketik lagi.';
+                }
+                return 'Baik, saya siap membantu. Silakan tanya lagi dengan kata kunci seperti "surat", "lapor", "booking", atau "peta".';
+            }
+
+            if (content.includes('halo') || content.includes('hai') || content.includes('selamat')) {
+                return 'Halo! Ada yang bisa saya bantu? Coba tanyakan tentang layanan publik, surat digital, booking fasilitas, atau pengaduan.';
+            }
+
+            return 'Maaf, saya belum memahami. Coba tanyakan dengan kata kunci seperti "surat", "lapor", "booking", "dashboard", atau "GIS".';
+        }
+
+        // Click Listener Menu Utama
+        const menuItems = document.querySelectorAll('.sidebar-menu li[data-page]');
+        menuItems.forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.sidebar-menu li').forEach(li => li.classList.remove('active'));
+                document.querySelectorAll('.submenu li').forEach(subLi => subLi.classList.remove('active-sub'));
+                this.classList.add('active');
+                
+                const pageKey = this.getAttribute('data-page');
+                const titleText = this.querySelector('.menu-link-content').textContent.trim();
+                renderPageContent(pageKey, titleText);
+                if (window.innerWidth <= 992) toggleMobileSidebar();
+            });
+        });
+
+        // Click Listener Sub-Dropdown Menu
+        function handleSubMenuClick(element, fullPathName) {
+            event.stopPropagation();
+            document.querySelectorAll('.submenu li').forEach(subLi => subLi.classList.remove('active-sub'));
+            document.querySelectorAll('.sidebar-menu li[data-page]').forEach(li => li.classList.remove('active'));
+
+            element.parentElement.classList.add('active-sub');
+            let cleanKey = fullPathName.toLowerCase().replace(/[^a-z0-9]/g, '-');
+            renderPageContent(cleanKey, fullPathName);
+            if (window.innerWidth <= 992) toggleMobileSidebar();
+        }
+
+        // FUNGSI UTAMA UNTUK LOADING LANDING PAGE DENGAN VECTOR PETA STRATEGIS
+        function loadLandingPage() {
+            document.querySelectorAll('.sidebar-menu li').forEach(li => li.classList.remove('active'));
+            document.querySelectorAll('.submenu li').forEach(subLi => subLi.classList.remove('active-sub'));
+            
+            document.getElementById('main-title-view').innerText = "Beranda";
+            let container = document.getElementById('main-content-area');
+            
+            container.innerHTML = `
+                <div class="landing-hero-container">
+                    <div class="landing-hero-photo">
+                        <img src="bg.bkrwl.png" alt="Landing Page Bakorwil II">
+                    </div>
+                    <div class="landing-hero-copy">
+                        <span class="badge-prov">Provinsi Jawa Timur</span>
+                        <h2>Akselerasi Tata Kelola & Pelayanan Publik Digital</h2>
+                        <p>Smart portal Bakorwil II Bojonegoro menampilkan informasi resmi, layanan publik, dan monitoring wilayah dengan tampilan yang lebih modern dan ringkas.</p>
+                        <div class="hero-summary-grid">
+                            <div class="hero-stat-card">
+                                <strong>42+</strong>
+                                <span>Layanan Aktif</span>
+                            </div>
+                            <div class="hero-stat-card">
+                                <strong>5</strong>
+                                <span>Wilayah Cakupan</span>
+                            </div>
+                            <div class="hero-stat-card">
+                                <strong>24/7</strong>
+                                <span>Akses Informasi</span>
+                            </div>
+                            <div class="hero-stat-card">
+                                <strong>4.8</strong>
+                                <span>Indeks Kepuasan</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="services-grid">
+                    <div class="service-card" onclick="triggerMenuSelect('dashboard-wilayah', 'Dashboard Wilayah')">
+                        <div class="icon-box"><i class="fa-solid fa-chart-pie"></i></div>
+                        <h4>Dashboard Wilayah</h4>
+                        <p>Monitoring data statistik makro regional serta visualisasi capaian kinerja operasional.</p>
+                    </div>
+
+                    <div class="service-card" onclick="triggerMenuSelect('booking-fasilitas', 'Booking Fasilitas')">
+                        <div class="icon-box"><i class="fa-solid fa-calendar-check"></i></div>
+                        <h4>Booking Gedung EJSC</h4>
+                        <p>Reservasi coworking space, aula rapat, dan studio ruang kreatif secara real-time.</p>
+                    </div>
+
+                    <div class="service-card" onclick="triggerMenuSelect('surat-digital', 'Surat Digital')">
+                        <div class="icon-box"><i class="fa-solid fa-envelope-open-text"></i></div>
+                        <h4>Pengajuan Surat</h4>
+                        <p>Manajemen tracking pengiriman surat keluar masuk dinas administratif publik.</p>
+                    </div>
+
+                    <div class="service-card" onclick="triggerMenuSelect('lapor', 'LAPOR!')">
+                        <div class="icon-box"><i class="fa-solid fa-bullhorn"></i></div>
+                        <h4>LAPOR! Pengaduan</h4>
+                        <p>Layanan penyampaian aspirasi keluhan masyarakat terkait prasarana umum.</p>
+                    </div>
+
+                    <div class="service-card" onclick="triggerMenuSelect('gis-peta', 'GIS / Peta Wilayah')">
+                        <div class="icon-box"><i class="fa-solid fa-map-location-dot"></i></div>
+                        <h4>GIS Interaktif</h4>
+                        <p>Akses data spasial dan informasi peta wilayah Bakorwil II secara ringkas.</p>
+                    </div>
+                </div>
+
+            `;
+        }
+
+        // Helper Trigger Click Menu Sidebar dari Card Ataupun Peta
+        function triggerMenuSelect(pageKey, titleText) {
+            let targetMenu = document.getElementById('menu-' + pageKey);
+            if(targetMenu) {
+                targetMenu.click();
+            } else {
+                renderPageContent(pageKey, titleText);
+            }
+        }
+
+        // INTERFACE RENDERING LOGIC DATA FACTORY
+        function renderPageContent(key, title) {
+            document.getElementById('main-title-view').innerText = title;
+            let container = document.getElementById('main-content-area');
+            let html = '';
+
+            if (key === 'lapor') {
+                window.open('https://jatim.lapor.go.id/', '_blank');
+                return;
+            }
+            if (key === 'video') {
+                window.open('https://www.youtube.com/@bakorwilbojonegoro7579', '_blank');
+                return;
+            }
+            if (key === 'foto') {
+                window.open('https://www.instagram.com/bakorwil_bojonegoro/', '_blank');
+                return;
+            }
+            if (key === 'lokasi') {
+                html = `
+                    <div class="content-card">
+                        <h3><i class="fa-solid fa-location-dot"></i> Lokasi Bakorwil II Bojonegoro</h3>
+                        <p style="color: var(--gray); font-size: 0.95rem; line-height: 1.7;">Hasil pencarian gedung ditampilkan langsung di halaman — peta otomatis terpusat pada "Bakorwil II Bojonegoro" dengan level zoom tinggi sehingga gedung terlihat. Geser/zoom untuk melihat detail; klik ikon Street View (Pegman) pada peta jika ingin tampilan jalan.</p>
+                        <div class="map-embed">
+                            <iframe src="https://www.google.com/maps?q=Bakorwil%20II%20Bojonegoro&z=18&output=embed" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                        </div>
+                    </div>`;
+                container.innerHTML = html;
+                return;
+            }
+
+            if(key.includes('dashboard-wilayah')) {
+                html = `
+                    <div class="dashboard-grid">
+                        <div class="stat-card"><span class="stat-label">Total Pengaduan</span><span class="stat-value">42</span></div>
+                        <div class="stat-card"><span class="stat-label">Surat Diproses</span><span class="stat-value">18</span></div>
+                        <div class="stat-card"><span class="stat-label">Booking Hari Ini</span><span class="stat-value">5</span></div>
+                        <div class="stat-card"><span class="stat-label">Indeks Kepuasan</span><span class="stat-value">4.8 / 5.0</span></div>
+                    </div>
+                    <div class="content-card">
+                        <h3><i class="fa-solid fa-bullseye"></i> Cakupan Manajemen Operasional Wilayah</h3>
+                        <p style="color: var(--gray); font-size: 0.9rem; line-height: 1.6;">Sinkronisasi koordinasi pembangunan strategis mencakup Kabupaten Bojonegoro, Tuban, Lamongan, Jombang, dan Mojokerto.</p>
+                    </div>`;
+            } 
+            else if(key.includes('surat-digital')) {
+                html = `
+                    <div class="content-card">
+                        <h3><i class="fa-solid fa-folder-plus"></i> Registrasi Log Surat Masuk & Keluar</h3>
+                        <div class="grid-2">
+                            <div class="form-group"><label>Nomor Indeks Surat Resmi</label><input type="text" class="form-control" placeholder="005/X/412.../2026"></div>
+                            <div class="form-group"><label>Perihal Instansi</label><input type="text" class="form-control" placeholder="Undangan Koordinasi Teknis SAKIP"></div>
+                        </div>
+                        <button class="btn">Simpan Data Surat</button>
+                    </div>`;
+            }
+            else if(key.includes('pengaduan') || key.includes('lapor')) {
+                html = `
+                    <div class="content-card">
+                        <h3><i class="fa-solid fa-paper-plane"></i> Form Pengiriman Aspirasi Publik LAPOR!</h3>
+                        <div class="form-group"><label>Nama Pelapor / Instansi Pemerintah</label><input type="text" class="form-control" placeholder="Nama Lengkap Pemohon"></div>
+                        <div class="form-group"><label>Deskripsi Detail Kendala Lapangan</label><textarea class="form-control" rows="4" placeholder="Ketik rincian aduan Anda di sini..."></textarea></div>
+                        <button class="btn">Kirim Aduan Resmi</button>
+                    </div>`;
+            }
+            else if(key.includes('booking')) {
+                html = `
+                    <div class="content-card">
+                        <h3><i class="fa-solid fa-clock"></i> Log Penjadwalan Ruang & Fasilitas EJSC</h3>
+                        <div class="form-group"><label>Nama Komunitas / Pihak Pemohon</label><input type="text" class="form-control"></div>
+                        <div class="grid-2">
+                            <div class="form-group"><label>Tanggal Pelaksanaan</label><input type="date" class="form-control"></div>
+                            <div class="form-group"><label>Pilihan Fasilitas Ruang</label><select class="form-control"><option>Ruang Kelas Utama</option><option>Coworking Space Pod</option><option>Studio Podcast Multimedia</option></select></div>
+                        </div>
+                        <button class="btn">Kunci Jadwal Booking</button>
+                    </div>`;
+            }
+            else if(key.includes('statistik')) {
+                html = `
+                    <div class="content-card">
+                        <h3><i class="fa-solid fa-chart-column"></i> Pencarian Target Capaian Pembangunan Makro</h3>
+                        <div style="background-color: var(--light); border: 1px solid var(--border); height: 200px; display: flex; align-items: center; justify-content: center; border-radius: 8px; font-size: 0.9rem; color: var(--gray);">
+                            [ Grafik Simulasi Statistik Regional ]
+                        </div>
+                    </div>`;
+            }
+            else if(key.includes('gis') || key.includes('peta')) {
+                html = `
+                    <div class="content-card">
+                        <h3><i class="fa-solid fa-map"></i> Layer Geografis Regional</h3>
+                        <p style="font-size:0.95rem; color:var(--gray); line-height:1.7;">Informasi spasial dan data peta dapat diakses melalui sistem GIS terintegrasi; visualisasi peta kini ditampilkan dengan tampilan panel ringkas tanpa grafik eksternal.</p>
+                    </div>`;
+            }
+            else if(key === 'beranda') {
+                loadLandingPage();
+                return;
+            }
+            else if(key.includes('berita') || key.includes('kegiatan')) {
+                html = `
+                    <div class="content-card">
+                        <h3><i class="fa-solid fa-rss"></i> Rilis Warta Berita Kegiatan Terkini</h3>
+                        <div class="news-item">
+                            <div class="news-meta">25 Mei 2026 • Rilis Pers</div>
+                            <h4 style="margin-bottom:4px;">Rapat Koordinasi Pengembangan Potensi Daerah Lintas Sektor</h4>
+                            <p style="font-size:0.85rem; color:var(--gray);">Optimalisasi akselerasi infrastruktur terintegrasi kab/kota.</p>
+                        </div>
+                    </div>`;
+            }
+            else if(key.includes('profil')) {
+                html = `
+                    <div class="content-card">
+                        <h3><i class="fa-solid fa-landmark"></i> Lembar Profil Instansi: ${title}</h3>
+                        <p style="font-size:0.9rem; line-height:1.7; color:#334155;">
+                            Bakorwil II Bojonegoro bertugas membantu Gubernur Jawa Timur dalam melakukan koordinasi, pembinaan, serta pengawasan jalannya roda pemerintahan regional wilayah kerja.
+                        </p>
+                    </div>`;
+            }
+            else {
+                html = `
+                    <div class="content-card">
+                        <h3><i class="fa-solid fa-folder-open"></i> Rekaman Arsip Berkas Dokumen Kategori ${title}</h3>
+                        <div class="grid-2" style="margin-top: 14px;">
+                            <div style="border:1px dashed var(--border); padding:20px; text-align:center; border-radius:8px; color:var(--gray);"><i class="fa-regular fa-file-pdf" style="font-size:1.5rem; margin-bottom:6px;"></i><br>Laporan_Program.pdf</div>
+                            <div style="border:1px dashed var(--border); padding:20px; text-align:center; border-radius:8px; color:var(--gray);"><i class="fa-solid fa-file-lines" style="font-size:1.5rem; margin-bottom:6px;"></i><br>Dokumen_Kegiatan.docx</div>
+                        </div>
+                    </div>`;
+            }
+
+            container.innerHTML = html;
+        }
+
+        // Eksekusi Muat Landing Page Utama Saat Awal Website Diakses
+        window.onload = function() {
+            loadLandingPage();
+        }
+    </script>
+</body>
+</html>
